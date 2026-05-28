@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Copperplate Gothic 29 BC";
+  src: local("Copperplate Gothic Bold"), local("Copperplate-Gothic-Bold"), local("Copperplate Light"), local("Copperplate");
+}
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-heading: "Copperplate Gothic 29 BC", "Cormorant Garamond", serif;
+  
+  --color-primary: #154212;
+  --color-primary-container: #2d5a27;
+  --color-on-primary-container: #9dd090;
+  --color-secondary-container: #e1e1c9;
+  --color-tertiary-fixed: #cceacd;
+  --color-outline-variant: #c2c9bb;
+  --color-outline: #72796e;
+  --color-on-surface: #1a1c1c;
+  --color-on-surface-variant: #42493e;
+}
+
+body {
+  background-color: #f9f9f9;
+  background-image: radial-gradient(circle at 2px 2px, #c2c9bb 1.2px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.pixel-border-inset {
+  box-shadow: inset 2px 2px 0 0 rgba(0, 0, 0, 0.1), inset -2px -2px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+.scrapbook-tilt-left {
+  transform: rotate(-1.5deg);
+}
+
+.scrapbook-tilt-right {
+  transform: rotate(1.2deg);
+}
+
+.organic-tilt-left {
+  transform: rotate(-1deg);
+}
+
+.organic-tilt-right {
+  transform: rotate(1.2deg);
+}
+
+.soil-row {
+  background: linear-gradient(to bottom, #5d4037 0%, #4e342e 100%);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.paper-texture {
+  background-color: #ffffff;
+  background-image: radial-gradient(#eeeeee 0.5px, transparent 0.5px);
+  background-size: 10px 10px;
+}
+
+.pressed-in {
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.1), inset -2px -2px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Hide scrollbar for layout */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Material Symbols customization in CSS */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.material-symbols-outlined.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

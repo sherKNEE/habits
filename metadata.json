@@ -1,0 +1,6 @@
+{
+  "name": "Garden Habit Tracker",
+  "description": "An interactive vintage scrapbook garden habit tracker where routing routines nurtures and harvests modular crops.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

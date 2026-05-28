@@ -1,0 +1,970 @@
+<!doctype html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Seasons - Garden Habit Tracker</title>
+    <!-- Beautiful vintage and gothic typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Authentic Material Symbols pixel icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- 
+      === EDITABLE GAME CONTENT DATABASE ===
+      You can easily edit, add, or customize all crops and gear items right here in the HTML!
+      Change the names, descriptions, costs, net worths, material icons, and Tailwind colors.
+    -->
+    <div id="editable-crops-and-gears" style="display: none;">
+      
+      <!-- ==================== CROPS DATABASE ==================== -->
+      <div id="html-crops-data">
+        <!-- Common Seeds -->
+        <div class="crop-item" 
+             data-id="sunflower" 
+             data-name="Sunflower" 
+             data-category="Common" 
+             data-cost="500" 
+             data-net="100" 
+             data-icon="local_florist" 
+             data-color="text-amber-500" 
+             data-difficulty="EASY">
+          Grow a majestic towering sunbeam. Sprout speed yields quick coin returns.
+        </div>
+
+        <div class="crop-item" 
+             data-id="apple" 
+             data-name="Apples" 
+             data-category="Common" 
+             data-cost="600" 
+             data-net="120" 
+             data-icon="park" 
+             data-color="text-red-600" 
+             data-difficulty="EASY">
+          Crisp crimson apples. Easy to cultivate on any standard garden row.
+        </div>
+
+        <div class="crop-item" 
+             data-id="orange" 
+             data-name="Orange" 
+             data-category="Common" 
+             data-cost="650" 
+             data-net="130" 
+             data-icon="circle" 
+             data-color="text-orange-500" 
+             data-difficulty="EASY">
+          Citrus delight rich with vitamins. Thrives under warm daytime energy.
+        </div>
+
+        <div class="crop-item" 
+             data-id="banana" 
+             data-name="Banana" 
+             data-category="Common" 
+             data-cost="700" 
+             data-net="150" 
+             data-icon="energy_savings_leaf" 
+             data-color="text-yellow-400" 
+             data-difficulty="EASY">
+          A glowing bunch of sweet yellow potassium. Boosts local trade value.
+        </div>
+
+        <div class="crop-item" 
+             data-id="berry" 
+             data-name="Berries" 
+             data-category="Common" 
+             data-cost="750" 
+             data-net="170" 
+             data-icon="psychology_alt" 
+             data-color="text-red-500" 
+             data-difficulty="EASY">
+          Sweet berries filled with natural antioxidant juices.
+        </div>
+
+        <div class="crop-item" 
+             data-id="carrot" 
+             data-name="Carrot" 
+             data-category="Common" 
+             data-cost="800" 
+             data-net="200" 
+             data-icon="spa" 
+             data-color="text-orange-600" 
+             data-difficulty="EASY">
+          Root vegetable that develops deep within the dark, rich soil.
+        </div>
+
+        <div class="crop-item" 
+             data-id="corn" 
+             data-name="Corn" 
+             data-category="Common" 
+             data-cost="850" 
+             data-net="210" 
+             data-icon="potted_plant" 
+             data-color="text-yellow-600" 
+             data-difficulty="EASY">
+          Golden kernels packed tightly together. Tall structures love early dew.
+        </div>
+
+        <div class="crop-item" 
+             data-id="lettuce" 
+             data-name="Lettuce" 
+             data-category="Common" 
+             data-cost="900" 
+             data-net="220" 
+             data-icon="eco" 
+             data-color="text-emerald-500" 
+             data-difficulty="EASY">
+          Cool crisp leaves with gorgeous green folds. Exceptionally light.
+        </div>
+
+        <div class="crop-item" 
+             data-id="pumpkin" 
+             data-name="Pumpkin" 
+             data-category="Common" 
+             data-cost="1000" 
+             data-net="250" 
+             data-icon="motion_photos_on" 
+             data-color="text-[#D05A3F]" 
+             data-difficulty="EASY">
+          Heavy seasonal giant. Ideal for autumn decorations and rich pies.
+        </div>
+
+        <div class="crop-item" 
+             data-id="tomato" 
+             data-name="Tomato" 
+             data-category="Common" 
+             data-cost="1100" 
+             data-net="280" 
+             data-icon="brightness_low" 
+             data-color="text-red-500" 
+             data-difficulty="EASY">
+          Vibrant organic bulbs that thrive on climbing support frameworks.
+        </div>
+
+        <div class="crop-item" 
+             data-id="cherry" 
+             data-name="Cherry" 
+             data-category="Common" 
+             data-cost="1200" 
+             data-net="300" 
+             data-icon="grain" 
+             data-color="text-rose-600" 
+             data-difficulty="EASY">
+          Ruby twin cherries linked by thin green stalks. Highly delightful.
+        </div>
+
+        <div class="crop-item" 
+             data-id="pineapple" 
+             data-name="Pineapple" 
+             data-category="Common" 
+             data-cost="1400" 
+             data-net="350" 
+             data-icon="hive" 
+             data-color="text-amber-600" 
+             data-difficulty="EASY">
+          Sovereign tropical crown fruit wearing armor of golden spikes.
+        </div>
+
+        <div class="crop-item" 
+             data-id="lavender" 
+             data-name="Lavender" 
+             data-category="Common" 
+             data-cost="1255" 
+             data-net="260" 
+             data-icon="grass" 
+             data-color="text-purple-400" 
+             data-difficulty="EASY">
+          Scented wild lavender spikes bringing complete serenity and calm.
+        </div>
+
+        <!-- Rare Seeds -->
+        <div class="crop-item" 
+             data-id="lychee" 
+             data-name="Lychee" 
+             data-category="Rare" 
+             data-cost="2500" 
+             data-net="600" 
+             data-icon="bubble_chart" 
+             data-color="text-pink-500" 
+             data-difficulty="MEDIUM">
+          Exotic translucent pulp sealed in rough crimson shells.
+        </div>
+
+        <div class="crop-item" 
+             data-id="peach" 
+             data-name="Peach" 
+             data-category="Rare" 
+             data-cost="2800" 
+             data-net="700" 
+             data-icon="wb_sunny" 
+             data-color="text-orange-400" 
+             data-difficulty="MEDIUM">
+          Fuzzy-skinned gold nectar-rich sphere. High demand among merchants.
+        </div>
+
+        <div class="crop-item" 
+             data-id="watermelon" 
+             data-name="Watermelon" 
+             data-category="Rare" 
+             data-cost="3200" 
+             data-net="800" 
+             data-icon="database" 
+             data-color="text-green-500" 
+             data-difficulty="MEDIUM">
+          Mammoth striped melon bursting with crisp electrolyte-rich water.
+        </div>
+
+        <div class="crop-item" 
+             data-id="pear" 
+             data-name="Pear" 
+             data-category="Rare" 
+             data-cost="3500" 
+             data-net="900" 
+             data-icon="water_drop" 
+             data-color="text-lime-500" 
+             data-difficulty="MEDIUM">
+          Elegant bell-shaped orchards choice. Demands mindful watering.
+        </div>
+
+        <div class="crop-item" 
+             data-id="dragonfruit" 
+             data-name="Dragon Fruit" 
+             data-category="Rare" 
+             data-cost="4000" 
+             data-net="1000" 
+             data-icon="workspace_premium" 
+             data-color="text-fuchsia-500" 
+             data-difficulty="MEDIUM">
+          Fiery neon scales concealing sweet speckled center. Majestic specimen.
+        </div>
+
+        <div class="crop-item" 
+             data-id="peppers" 
+             data-name="Peppers" 
+             data-category="Rare" 
+             data-cost="4500" 
+             data-net="1150" 
+             data-icon="electric_bolt" 
+             data-color="text-red-500" 
+             data-difficulty="MEDIUM">
+          A fiery cayenne kick that energizes any local trading catalog.
+        </div>
+
+        <div class="crop-item" 
+             data-id="mushroom" 
+             data-name="Mushroom" 
+             data-category="Rare" 
+             data-cost="5000" 
+             data-net="1300" 
+             data-icon="emoji_nature" 
+             data-color="text-amber-700" 
+             data-difficulty="MEDIUM">
+          Savory subterranean cap requiring shaded greenhouse conditions.
+        </div>
+
+        <div class="crop-item" 
+             data-id="coconut" 
+             data-name="Coconut" 
+             data-category="Rare" 
+             data-cost="5800" 
+             data-net="1500" 
+             data-icon="grid_view" 
+             data-color="text-amber-800" 
+             data-difficulty="MEDIUM">
+          Hard-shelled palm treasure containing rich water and edible meat.
+        </div>
+
+        <!-- Legendary Seeds of high value -->
+        <div class="crop-item" 
+             data-id="oak" 
+             data-name="Ancient Oak Trees" 
+             data-category="Legendary" 
+             data-cost="12000" 
+             data-net="3000" 
+             data-icon="nature" 
+             data-color="text-emerald-800" 
+             data-difficulty="HARD"
+             data-unlocked-streak="5">
+          Sovereign timber of the woods. Produces dense premium oak acorns.
+        </div>
+
+        <div class="crop-item" 
+             data-id="mango" 
+             data-name="Glistening Mango" 
+             data-category="Legendary" 
+             data-cost="15000" 
+             data-net="3800" 
+             data-icon="star" 
+             data-color="text-yellow-500" 
+             data-difficulty="HARD"
+             data-unlocked-streak="8">
+          Rich sunset-colored pulp praised as the monarch of stone fruits.
+        </div>
+
+        <div class="crop-item" 
+             data-id="grapes" 
+             data-name="Muscat Grapes" 
+             data-category="Legendary" 
+             data-cost="18500" 
+             data-net="4700" 
+             data-icon="filter_vintage" 
+             data-color="text-indigo-500" 
+             data-difficulty="HARD"
+             data-unlocked-streak="10">
+          Royal purple clusters that glimmer like deep gemstones.
+        </div>
+
+        <div class="crop-item" 
+             data-id="starfruit" 
+             data-name="Celestial Star Fruit" 
+             data-category="Legendary" 
+             data-cost="25000" 
+             data-net="6500" 
+             data-icon="auto_awesome" 
+             data-color="text-cyan-400" 
+             data-difficulty="HARD"
+             data-unlocked-streak="12">
+          Stellar pentagram slices glowing with astronomical value.
+        </div>
+      </div>
+
+      <!-- ==================== GEARS DATABASE ==================== -->
+      <div id="html-gears-data">
+        <div class="gear-item" 
+             data-id="wateringCan" 
+             data-name="Watering Can" 
+             data-cost="100" 
+             data-icon="sprinkler" 
+             data-image-url=""
+             data-bg-class="bg-blue-105" 
+             data-text-class="text-blue-800" 
+             data-border-class="border-blue-200"
+             data-badge=""
+             data-badge-class="">
+          Necessary to nurture seeds. (Common: 5, Rare: 10, Legendary: 20 waterings required).
+        </div>
+
+        <div class="gear-item" 
+             data-id="mutationCrates" 
+             data-name="Mutation Crate" 
+             data-cost="2500" 
+             data-icon="mystery_quest" 
+             data-image-url=""
+             data-bg-class="bg-purple-105" 
+             data-text-class="text-purple-800" 
+             data-border-class="border-purple-200"
+             data-badge="RARE CRT"
+             data-badge-class="bg-red-100 text-red-800 border-red-200">
+          Unbox powerful sprays: Golden (x2), Silver (x3), Diamond (x4), Frozen (x5), or Rainbow (x6) coins!
+        </div>
+
+        <div class="gear-item" 
+             data-id="cooldownTickets" 
+             data-name="Cooldown Ticket" 
+             data-cost="1000" 
+             data-icon="confirmation_number" 
+             data-image-url=""
+             data-bg-class="bg-yellow-105" 
+             data-text-class="text-yellow-800" 
+             data-border-class="border-yellow-250"
+             data-badge="POPULAR"
+             data-badge-class="bg-yellow-105 text-yellow-850 border-yellow-200">
+          1-Hour reduction ticket. Accelerates Seed Emporium timer, Gear restock, or completed task cooldowns!
+        </div>
+
+        <div class="gear-item" 
+             data-id="focusTimer" 
+             data-name="Focus Timer" 
+             data-cost="8200" 
+             data-icon="timer" 
+             data-image-url=""
+             data-bg-class="bg-red-105" 
+             data-text-class="text-[#C0392B]" 
+             data-border-class="border-red-200"
+             data-badge="PERMANENT"
+             data-badge-class="bg-amber-100 text-amber-800 border-amber-200">
+          Double coins permanently (2x modifier value multiplier) for completing deep work habit tasks.
+        </div>
+
+        <div class="gear-item" 
+             data-id="shovel" 
+             data-name="Gardening Shovel" 
+             data-cost="500" 
+             data-icon="hardware" 
+             data-image-url=""
+             data-bg-class="bg-green-105" 
+             data-text-class="text-[#1E8449]" 
+             data-border-class="border-green-200"
+             data-badge="PERMANENT"
+             data-badge-class="bg-amber-100 text-amber-800 border-amber-200">
+          Remove growing crops from your tiles without destroying them. Safely recovers and returns the seeds back into your inventory.
+        </div>
+      </div>
+
+      <!-- ==================== BRANDING & GENERAL WIDGET IMAGES ==================== -->
+      <div id="html-branding-logos"
+           data-app-logo="https://cdn-icons-png.flaticon.com/512/1183/1183672.png"
+           data-app-title-logo=""
+           data-guild-badge=""
+           data-shop-banner=""
+           data-profile-header-img="">
+      </div>
+
+      <!-- ==================== CLOTHING & AVATAR PIECES DATABASE ==================== -->
+      <!-- Add your custom clothing layers here. The 'data-image-url' is overlaid on the character avatar base character -->
+      <div id="html-clothing-data">
+        <!-- Outfits/Overalls -->
+        <div class="clothing-item"
+             data-id="Standard Overalls"
+             data-category="outfits"
+             data-name="Standard Overalls"
+             data-cost="0"
+             data-rarity="Common"
+             data-image-url="">
+          The basic denim work apparel of every novice gardener. comfortable and simple.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Beekeeper Suit"
+             data-category="outfits"
+             data-name="Beekeeper Smock"
+             data-cost="1500"
+             data-rarity="Rare"
+             data-image-url="">
+          Sealed thick golden-white fabric. Essential for handling aggressive hive swarms.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Master Farmer Overalls"
+             data-category="outfits"
+             data-name="Master Farmer Apron"
+             data-cost="3200"
+             data-rarity="Legendary"
+             data-image-url="">
+          Premium embroidered emerald apron given to esteemed veterans.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Celestial Hood"
+             data-category="outfits"
+             data-name="Celestial Cloak"
+             data-cost="5000"
+             data-rarity="Legendary"
+             data-image-url="">
+          A shimmering astronomical stars-etched ceremonial evening cloth.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Cowboy Gear"
+             data-category="outfits"
+             data-name="Cowboy Outfit"
+             data-cost="1800"
+             data-rarity="Rare"
+             data-image-url="">
+          Traditional work denim overalls paired with a cozy crimson bandana neck wrap.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Garden Apron"
+             data-category="outfits"
+             data-name="Garden Apron"
+             data-cost="600"
+             data-rarity="Common"
+             data-image-url="">
+          A soft utility garden apron over a sage-green shirt with double front tool slot pockets.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Autumn Stripe Knit"
+             data-category="outfits"
+             data-name="Autumn Stripe Knit"
+             data-cost="850"
+             data-rarity="Common"
+             data-image-url="">
+          A cozy heavy knit wool sweater in horizontal stripes of orange, yellow, and forest green.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Peasant Blouse"
+             data-category="outfits"
+             data-name="Peasant Blouse"
+             data-cost="1150"
+             data-rarity="Rare"
+             data-image-url="">
+          A romantic light cream peasant cotton blouse with loose, flowing sleeves and denim jeans.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Explorer Gear"
+             data-category="outfits"
+             data-name="Explorer Gear"
+             data-cost="1600"
+             data-rarity="Rare"
+             data-image-url="">
+          A comfortable canvas safari utility vest with front clip compartments and leather mud-gloves.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Tweed Blazer"
+             data-category="outfits"
+             data-name="Formal Tweed"
+             data-cost="3500"
+             data-rarity="Legendary"
+             data-image-url="">
+          A sophisticated, checked wool blazer in rich academia charcoal, complete with tie and lapels.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Space-Farm Jumpsuit"
+             data-category="outfits"
+             data-name="Space-Farm Jumpsuit"
+             data-cost="4500"
+             data-rarity="Legendary"
+             data-image-url="">
+          A high-tech pressurized white space suit with control valves and a gold wheat badge on the chest.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Mustard Hoodie"
+             data-category="outfits"
+             data-name="Mustard Hoodie"
+             data-cost="500"
+             data-rarity="Common"
+             data-image-url="">
+          A relaxed bright yellow fleece hoodie with adjustable drawstring hood and hand-warmer pockets.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Crimson Pullover"
+             data-category="outfits"
+             data-name="Crimson Pullover"
+             data-cost="550"
+             data-rarity="Common"
+             data-image-url="">
+          A cozy crimson red thermal sweater with subtle retro-striped details.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Floral Overalls"
+             data-category="outfits"
+             data-name="Floral Overalls"
+             data-cost="1400"
+             data-rarity="Rare"
+             data-image-url="">
+          Sweet denim overalls custom-embroidered with tiny happy sunflower blossoms.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Winter Overalls"
+             data-category="outfits"
+             data-name="Winter Overalls"
+             data-cost="1350"
+             data-rarity="Rare"
+             data-image-url="">
+          Thick scarlet red velvet dungarees lined with fluffy hand-stitched white holiday wool trim.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Wool Cable-Knit"
+             data-category="outfits"
+             data-name="Wool Cable-Knit"
+             data-cost="700"
+             data-rarity="Common"
+             data-image-url="">
+          An elegant heavyweight braided cream wool sweater designed for breezy autumn mornings.
+        </div>
+
+        <!-- Props / Hands Accessories -->
+        <div class="clothing-item"
+             data-id="Vintage Rake"
+             data-category="props"
+             data-name="Vintage Rake"
+             data-cost="0"
+             data-rarity="Common"
+             data-image-url="">
+          Traditional wooden-toothed rake.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Golden Shovel"
+             data-category="props"
+             data-name="Golden Work Shovel"
+             data-cost="1205"
+             data-rarity="Rare"
+             data-image-url="">
+          Gilded hand spadeware reflecting premium sunrise light.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Cozy Mug"
+             data-category="props"
+             data-name="Cozy Mug"
+             data-cost="800"
+             data-rarity="Common"
+             data-image-url="">
+          A warm mug of organic green lavender tea. Rich inside steam.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Bucket Hat"
+             data-category="props"
+             data-name="Bucket Hat"
+             data-cost="400"
+             data-rarity="Common"
+             data-image-url="">
+          A cool blue canvas fishing hat with micro stitches and hanging ties.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Classic Cap"
+             data-category="props"
+             data-name="Classic Cap"
+             data-cost="500"
+             data-rarity="Common"
+             data-image-url="">
+          A sports-fitting clean white baseball cap featuring a leaf logo on front.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Pirate Hat"
+             data-category="props"
+             data-name="Pirate Hat"
+             data-cost="2500"
+             data-rarity="Legendary"
+             data-image-url="">
+          A grand captain brimmed hat wrapped by a detailed crimson ribbon sash.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Bowler Hat"
+             data-category="props"
+             data-name="Bowler Hat"
+             data-cost="1100"
+             data-rarity="Rare"
+             data-image-url="">
+          Classy deep circular black felt headwear highlighted by a sleek green band.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Santa Hat"
+             data-category="props"
+             data-name="Santa Hat"
+             data-cost="1200"
+             data-rarity="Rare"
+             data-image-url="">
+          Cosy red felt winter cone adorned with fluffy trim and a brass bell accessory.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Flower Wreath"
+             data-category="props"
+             data-name="Flower Wreath"
+             data-cost="1400"
+             data-rarity="Rare"
+             data-image-url="">
+          A beautiful circle crown hand-braided with colorful valley blossom buds.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Witch Hat"
+             data-category="props"
+             data-name="Witch Hat"
+             data-cost="3050"
+             data-rarity="Legendary"
+             data-image-url="">
+          Tilted tall purple conical fabric with an ancient buckled leather girdle ribbon.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Party Hat"
+             data-category="props"
+             data-name="Party Hat"
+             data-cost="600"
+             data-rarity="Common"
+             data-image-url="">
+          Polka spiral celebration cone of fun stripes topped by a fuzzy purple pom.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Leprechaun Hat"
+             data-category="props"
+             data-name="Leprechaun Hat"
+             data-cost="1600"
+             data-rarity="Rare"
+             data-image-url="">
+          A tall emerald green stovepipe top hat finished with gold square buckle clasp.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Construction Hardhat"
+             data-category="props"
+             data-name="Construction Hardhat"
+             data-cost="750"
+             data-rarity="Common"
+             data-image-url="">
+          Strong safety orange helmet stamped with miniature crossed tools insignia.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Royal Crown"
+             data-category="props"
+             data-name="Royal Crown"
+             data-cost="5000"
+             data-rarity="Legendary"
+             data-image-url="">
+          Eminent gold battlement crown layered with a red cushion and embedded gems.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Sprout Clip"
+             data-category="props"
+             data-name="Sprout Clip"
+             data-cost="300"
+             data-rarity="Common"
+             data-image-url="">
+          A miniature leaf stem pin clip that springs beautifully into your locks.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Bear Ears Headband"
+             data-category="props"
+             data-name="Bear Ears Headband"
+             data-cost="950"
+             data-rarity="Rare"
+             data-image-url="">
+          Plush velvet hoop featuring two fluffy circular bear ears and pretty red ribbons.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Chef Hat"
+             data-category="props"
+             data-name="Chef Hat"
+             data-cost="800"
+             data-rarity="Common"
+             data-image-url="">
+          Excellent vertical white pleated gourmet wrap hosting a gold wheat sticker.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Knitted Beanie"
+             data-category="props"
+             data-name="Knitted Beanie"
+             data-cost="450"
+             data-rarity="Common"
+             data-image-url="">
+          Sky-blue winter knitted ribbed skull cap with a dynamic crown pom-pom.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Chic Glasses"
+             data-category="props"
+             data-name="Chic Glasses"
+             data-cost="550"
+             data-rarity="Common"
+             data-image-url="">
+          Sweet tortoiseshell glass frames that boost your aesthetic garden presence.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Elegant Headband"
+             data-category="props"
+             data-name="Elegant Headband"
+             data-cost="350"
+             data-rarity="Common"
+             data-image-url="">
+          A clean black ribbon wrap to hold back hair locks during deep gardening works.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Conical Straw Hat"
+             data-category="props"
+             data-name="Conical Straw Hat"
+             data-cost="1350"
+             data-rarity="Rare"
+             data-image-url="">
+          A traditional sloping conical straw-weave shield which blocks bright midday sun rays.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Classic Sun Hat"
+             data-category="props"
+             data-name="Classic Sun Hat"
+             data-cost="700"
+             data-rarity="Common"
+             data-image-url="">
+          Flat top woven sun-shading helmet complete with a thick brown leather strap.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Floppy Straw Hat"
+             data-category="props"
+             data-name="Floppy Straw Hat"
+             data-cost="650"
+             data-rarity="Common"
+             data-image-url="">
+          Curly woven broad-brimmed floppy straw hat giving cute rustic farmer charm.
+        </div>
+
+        <!-- Backgrounds -->
+        <div class="clothing-item"
+             data-id="Default Greenhouse"
+             data-category="backgrounds"
+             data-name="Default Greenhouse"
+             data-cost="0"
+             data-rarity="Common"
+             data-image-url="">
+          A cozy, sun-drenched sanctuary with soft hanging root creepers.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Autumn Row"
+             data-category="backgrounds"
+             data-name="Autumn Harvest Field"
+             data-cost="2800"
+             data-rarity="Rare"
+             data-image-url="">
+          A beautiful setting featuring amber leaves, pumpkins, and a soft breeze.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Celestial Canopy"
+             data-category="backgrounds"
+             data-name="Astral Canopy Room"
+             data-cost="6000"
+             data-rarity="Legendary"
+             data-image-url="">
+          A stunning violet-glowing sky dome revealing planets and shooting meteoroids.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Vintage Foliage Wallpaper"
+             data-category="backgrounds"
+             data-name="Vintage Foliage Wallpaper"
+             data-cost="950"
+             data-rarity="Common"
+             data-image-url="">
+          Repeating emerald leaf vine wallpaper with beautiful, tiny golden buttercups.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Sunny Garden Beds"
+             data-category="backgrounds"
+             data-name="Sunny Garden Beds"
+             data-cost="1600"
+             data-rarity="Rare"
+             data-image-url="">
+          A bright, sunshine-filled yard featuring tilled soil garden boxes blooming with crops.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Busy Bee Sanctuary"
+             data-category="backgrounds"
+             data-name="Busy Bee Sanctuary"
+             data-cost="1850"
+             data-rarity="Rare"
+             data-image-url="">
+          A friendly hive yard with wooden beehives, honey jars, and honeybees buzzing around.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Apple Orchard Walk"
+             data-category="backgrounds"
+             data-name="Apple Orchard Walk"
+             data-cost="2200"
+             data-rarity="Rare"
+             data-image-url="">
+          Lush apple trees on the grass with sweet red apples dangling and scattered on the floor.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Plentiful Vineyard Rows"
+             data-category="backgrounds"
+             data-name="Plentiful Vineyard Rows"
+             data-cost="2400"
+             data-rarity="Rare"
+             data-image-url="">
+          Rows of wooden grape trellises laden with rich purple harvest-ready vineyard grapes.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Blooming Florist's Corner"
+             data-category="backgrounds"
+             data-name="Blooming Florist's Corner"
+             data-cost="3200"
+             data-rarity="Legendary"
+             data-image-url="">
+          A colorful floristry field packed with rows of red tulips, yellow daisies, and fresh bouquets.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Strawberry Fenced Garden"
+             data-category="backgrounds"
+             data-name="Strawberry Fenced Garden"
+             data-cost="2100"
+             data-rarity="Rare"
+             data-image-url="">
+          A cozy garden with a cedar fence, fresh strawberry bushes, and a cute ladybug sign.
+        </div>
+
+        <div class="clothing-item"
+             data-id="Cozy Supply Workshop"
+             data-category="backgrounds"
+             data-name="Cozy Supply Workshop"
+             data-cost="3500"
+             data-rarity="Legendary"
+             data-image-url="">
+          A warm brick potting shed with wooden supply chests, climbing ivy, and seed shelves.
+        </div>
+      </div>
+
+      <!-- ==================== FRIENDS PROFILES DATABASE ==================== -->
+      <div id="html-friends-data">
+        <div class="friend-item"
+             data-id="f1"
+             data-username="MR MARK"
+             data-avatar-url="https://cdn.corenexis.com/files/c/5342325720.png"
+             data-status="pending"
+             data-bio="👨‍🌾 Hardworking supervisor from North Ward. Loves corn-butter and task logs!">
+        </div>
+        <div class="friend-item"
+             data-id="f2"
+             data-username="Sam_EEE"
+             data-avatar-url="https://cdn.corenexis.com/files/c/7811824720.png"
+             data-status="online"
+             data-bio="🐝 Buzz buzz! Sam here. Loving sunflowers, high streaks, and natural honey harvests.">
+        </div>
+        <div class="friend-item"
+             data-id="f3"
+             data-username="NICOLINE123"
+             data-avatar-url="https://cdn.corenexis.com/files/c/1984646720.png"
+             data-status="offline"
+             data-bio="🌸 Valley florist. Passionate about green rose shoots, keeping hydrated, and early morning routines.">
+        </div>
+      </div>
+
+      <!-- ==================== TRADING HUB DATABASE ==================== -->
+      <div id="html-trades-data">
+        <div class="trade-item"
+             data-id="tr1"
+             data-user="SH3RM4Y0"
+             data-avatar-url="https://cdn.corenexis.com/files/c/5257334720.png"
+             data-type="offer"
+             data-item="Golden Apple">
+        </div>
+        <div class="trade-item"
+             data-id="tr2"
+             data-user="SHAYI_Y"
+             data-avatar-url="https://cdn.corenexis.com/files/c/7983151720.png"
+             data-type="request"
+             data-item="Straw Hat">
+        </div>
+      </div>
+      
+      
+    </div>
+
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
