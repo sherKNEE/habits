@@ -6,6 +6,7 @@ import { ShopTab } from './components/ShopTab';
 import { SocialTab } from './components/SocialTab';
 import { SettingsTab } from './components/SettingsTab';
 import { ProfileView } from './components/ProfileView';
+import { EarnedBadgeOverlay } from './components/EarnedBadgeOverlay';
 
 type Tab = 'garden' | 'tasks' | 'shop' | 'social' | 'settings';
 
@@ -19,11 +20,19 @@ const AppContent: React.FC = () => {
     alertMsg,
     setProfileOverlayTarget,
     profileOverlayTarget,
-    triggerAlert
+    triggerAlert,
+    earnedBadgeOverlay,
+    setEarnedBadgeOverlay
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<Tab>('garden');
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+
+  // States for legitimate email provider registration flow
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const [selectedSignUpProvider, setSelectedSignUpProvider] = useState<'google' | 'microsoft' | 'yahoo' | 'proton' | null>(null);
+  const [registeringEmail, setRegisteringEmail] = useState('');
+  const [registeringName, setRegisteringName] = useState('');
 
   // Sign out simulation
   const handleSignOut = () => {
@@ -79,9 +88,30 @@ const AppContent: React.FC = () => {
                 type="email" 
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="shernee_mo@gmail.com"
+                placeholder="sherney_mo@gmail.com"
                 className="w-full bg-[#eeeeee] border-b-2 border-outline-variant rounded-lg p-2.5 font-[#1a1c1c] text-xs focus:outline-none"
               />
+              <div className="flex flex-col gap-1.5 pt-1.5 border-t border-dotted border-stone-200 mt-1">
+                <button
+                  type="button"
+                  onClick={() => setIsSignUpModalOpen(true)}
+                  className="font-sans text-[10px] font-black text-[#154212] hover:underline flex items-center gap-1 cursor-pointer self-start"
+                >
+                  <span className="material-symbols-outlined text-xs font-bold text-[#154212]">open_in_new</span>
+                  Register Legitimate Email (Gmail/Microsoft)
+                </button>
+                {email && (
+                  <span className={`font-sans text-[9px] font-extrabold uppercase tracking-widest ${
+                    email.match(/^[a-zA-Z0-9._%+-]+@(gmail|googlemail|outlook|hotmail|live|yahoo|proton|protonmail|microsoft|icloud)\.com$/i)
+                      ? 'text-green-700 font-bold'
+                      : 'text-amber-700'
+                  }`}>
+                    {email.match(/^[a-zA-Z0-9._%+-]+@(gmail|googlemail|outlook|hotmail|live|yahoo|proton|protonmail|microsoft|icloud)\.com$/i)
+                      ? '✓ Verified Legitimate Domain'
+                      : '⚠ Verification Suggested'}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -106,6 +136,184 @@ const AppContent: React.FC = () => {
             </button>
           </div>
         </form>
+
+        {/* Email Provider wizard overlays */}
+        {isSignUpModalOpen && (
+          <div className="fixed inset-0 bg-stone-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fade-in text-stone-900">
+            <div className="bg-white rounded-2xl border-4 border-[#154212] p-6 w-full max-w-sm space-y-5 shadow-2xl relative paper-texture">
+              <button 
+                type="button"
+                onClick={() => {
+                  setIsSignUpModalOpen(false);
+                  setSelectedSignUpProvider(null);
+                }}
+                className="absolute top-3 right-3 text-stone-400 hover:text-stone-800 bg-white border border-stone-200 shadow-sm rounded-full w-7 h-7 flex items-center justify-center font-bold text-xs"
+              >
+                ✕
+              </button>
+
+              <div className="text-center space-y-1">
+                <span className="material-symbols-outlined text-4xl text-[#154212] animate-pulse">lock_open</span>
+                <h3 className="font-heading text-lg font-black text-[#154212] uppercase tracking-wider">
+                  Email Registration
+                </h3>
+                <p className="font-sans text-[10px] text-stone-450 font-extrabold uppercase tracking-widest block">
+                  Official Provider Linker
+                </p>
+                <div className="h-0.5 bg-[#154212]/30 w-1/4 mx-auto mt-2"></div>
+              </div>
+
+              <p className="font-serif italic text-xs text-stone-600 text-center px-2 leading-relaxed">
+                To guarantee habit-tracking integrity, please pair your profile with an authentic, legitimate email provider.
+              </p>
+
+              {!selectedSignUpProvider ? (
+                <div className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedSignUpProvider('google');
+                      window.open('https://accounts.google.com/signup?service=mail', '_blank');
+                    }}
+                    className="w-full flex items-center justify-between p-3 border border-stone-200 hover:border-[#154212] rounded-xl hover:bg-stone-50 cursor-pointer transition-all text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">📧</span>
+                      <div className="text-left">
+                        <span className="font-sans text-xs font-black text-stone-800 uppercase block">Sprout with Google Gmail</span>
+                        <span className="font-sans text-[9px] text-[#72796e]">Opens secure accounts.google.com</span>
+                      </div>
+                    </div>
+                    <span className="material-symbols-outlined text-sm font-bold text-stone-400">arrow_forward</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedSignUpProvider('microsoft');
+                      window.open('https://signup.live.com/', '_blank');
+                    }}
+                    className="w-full flex items-center justify-between p-3 border border-stone-200 hover:border-[#154212] rounded-xl hover:bg-stone-50 cursor-pointer transition-all text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">💻</span>
+                      <div className="text-left">
+                        <span className="font-sans text-xs font-black text-stone-800 uppercase block">Sprout with Microsoft Outlook</span>
+                        <span className="font-sans text-[9px] text-[#72796e]">Opens secure signup.live.com</span>
+                      </div>
+                    </div>
+                    <span className="material-symbols-outlined text-sm font-bold text-stone-400">arrow_forward</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedSignUpProvider('yahoo');
+                      window.open('https://login.yahoo.com/account/create', '_blank');
+                    }}
+                    className="w-full flex items-center justify-between p-3 border border-stone-200 hover:border-[#154212] rounded-xl hover:bg-stone-50 cursor-pointer transition-all text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">🟣</span>
+                      <div className="text-left">
+                        <span className="font-sans text-xs font-black text-stone-800 uppercase block">Sprout with Yahoo Mail</span>
+                        <span className="font-sans text-[9px] text-[#72796e]">Opens secure login.yahoo.com</span>
+                      </div>
+                    </div>
+                    <span className="material-symbols-outlined text-sm font-bold text-stone-400">arrow_forward</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedSignUpProvider('proton');
+                      window.open('https://account.proton.me/signup', '_blank');
+                    }}
+                    className="w-full flex items-center justify-between p-3 border border-stone-200 hover:border-[#154212] rounded-xl hover:bg-stone-50 cursor-pointer transition-all text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">⚛️</span>
+                      <div className="text-left">
+                        <span className="font-sans text-xs font-black text-stone-800 uppercase block">Sprout with ProtonMail</span>
+                        <span className="font-sans text-[9px] text-[#72796e]">Opens secure account.proton.me</span>
+                      </div>
+                    </div>
+                    <span className="material-symbols-outlined text-sm font-bold text-stone-400">arrow_forward</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4 pt-1">
+                  <div className="bg-[#e8f5e9] border border-[#a5d6a7]/65 p-3 rounded-xl space-y-1">
+                    <span className="font-sans text-[9px] font-black uppercase text-green-800 tracking-widest block">
+                      ✓ Provider Window Launched
+                    </span>
+                    <p className="font-sans text-[11px] leading-relaxed text-green-900 font-semibold">
+                      Please complete your registration on official <b>{selectedSignUpProvider === 'google' ? 'Google Account' : selectedSignUpProvider === 'microsoft' ? 'Microsoft Live' : selectedSignUpProvider === 'yahoo' ? 'Yahoo Mail' : 'ProtonMail'}</b> portal.
+                    </p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <label className="block text-[9px] uppercase font-sans font-black text-secondary tracking-widest text-left">Enter Your New Registered Email</label>
+                      <input 
+                        type="email" 
+                        required
+                        value={registeringEmail}
+                        onChange={e => setRegisteringEmail(e.target.value)}
+                        placeholder={selectedSignUpProvider === 'google' ? 'e.g., yourname@gmail.com' : 'e.g., yourname@outlook.com'}
+                        className="w-full bg-[#eeeeee] border border-stone-200 rounded-lg p-2.5 font-sans text-xs focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="block text-[9px] uppercase font-sans font-black text-secondary tracking-widest text-left">Gardener Username (Optional)</label>
+                      <input 
+                        type="text" 
+                        value={registeringName}
+                        onChange={e => setRegisteringName(e.target.value)}
+                        placeholder="e.g., Master Gardener"
+                        className="w-full bg-[#eeeeee] border border-stone-250 rounded-lg p-2.5 font-sans text-xs focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2.5 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedSignUpProvider(null)}
+                      className="flex-1 py-2 bg-stone-100 hover:bg-stone-250 rounded-xl font-sans text-xs font-bold uppercase transition-all tracking-wider text-stone-600 cursor-pointer"
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!registeringEmail.trim().includes('@')) {
+                          triggerAlert("Please enter a valid complete email address!");
+                          return;
+                        }
+                        setEmail(registeringEmail);
+                        if (registeringName.trim()) {
+                          setUsername(registeringName);
+                        }
+                        setIsSignUpModalOpen(false);
+                        setSelectedSignUpProvider(null);
+                        triggerAlert(`🔗 Legitimate email address linked successfully!`);
+                      }}
+                      className="flex-1 py-2 bg-[#154212] hover:bg-[#23501e] text-white rounded-xl font-sans text-xs font-bold uppercase transition-all tracking-wider shadow-md active:translate-y-0.5 cursor-pointer"
+                    >
+                      Complete Link
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              <div className="text-[9px] text-stone-400 font-medium text-center">
+                * The system verifies domain and format markers to ensure genuine credential integrity.
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -221,6 +429,13 @@ const AppContent: React.FC = () => {
           <span className="font-sans text-[9px] uppercase tracking-wider mt-0.5 font-bold">Settings</span>
         </button>
       </nav>
+
+      {earnedBadgeOverlay && (
+        <EarnedBadgeOverlay 
+          badgeId={earnedBadgeOverlay}
+          onClose={() => setEarnedBadgeOverlay(null)}
+        />
+      )}
     </div>
   );
 };

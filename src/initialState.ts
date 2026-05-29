@@ -23,7 +23,8 @@ export const INITIAL_TASKS: HabitTask[] = [
     progress: 0,
     target: 8,
     icon: 'water_full',
-    completed: false
+    completed: false,
+    verificationType: 'image'
   },
   {
     id: 't2',
@@ -35,7 +36,8 @@ export const INITIAL_TASKS: HabitTask[] = [
     progress: 0,
     target: 1,
     icon: 'directions_walk',
-    completed: false
+    completed: false,
+    verificationType: 'image'
   },
   {
     id: 't3',
@@ -59,7 +61,8 @@ export const INITIAL_TASKS: HabitTask[] = [
     progress: 0,
     target: 1,
     icon: 'spa',
-    completed: false
+    completed: false,
+    verificationType: 'timer'
   },
   {
     id: 't5',
@@ -71,7 +74,8 @@ export const INITIAL_TASKS: HabitTask[] = [
     progress: 0,
     target: 1,
     icon: 'timer',
-    completed: false
+    completed: false,
+    verificationType: 'image'
   },
   {
     id: 't6',
@@ -83,7 +87,8 @@ export const INITIAL_TASKS: HabitTask[] = [
     progress: 0,
     target: 1,
     icon: 'book',
-    completed: false
+    completed: false,
+    verificationType: 'image'
   },
   {
     id: 't7',
@@ -95,7 +100,8 @@ export const INITIAL_TASKS: HabitTask[] = [
     progress: 0,
     target: 1,
     icon: 'music_note',
-    completed: false
+    completed: false,
+    verificationType: 'image'
   },
   {
     id: 't8',
@@ -107,7 +113,8 @@ export const INITIAL_TASKS: HabitTask[] = [
     progress: 0,
     target: 1,
     icon: 'terminal',
-    completed: false
+    completed: false,
+    verificationType: 'image'
   }
 ];
 

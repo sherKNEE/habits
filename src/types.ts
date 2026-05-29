@@ -24,6 +24,7 @@ export interface HabitTask {
   icon: string;
   completed: boolean;
   completedAt?: number;
+  verificationType?: 'image' | 'video' | 'timer';
 }
 
 export interface ShopItem {
@@ -59,3 +60,14 @@ export interface Minigame {
   rewardCoins: number;
   icon: string;
 }
+
+export interface MailMessage {
+  id: string;
+  sender: string;
+  receiver: string;
+  avatar: string;
+  text: string;
+  timestamp: string;
+  isRead: boolean;
+}
+

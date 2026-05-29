@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { PlantPlot, HabitTask, ShopItem, Friend, TradeOffer, Minigame } from '../types';
+import { PlantPlot, HabitTask, ShopItem, Friend, TradeOffer, Minigame, MailMessage } from '../types';
 import { INITIAL_PLOTS, INITIAL_TASKS, SHOP_ITEMS, INITIAL_FRIENDS } from '../initialState';
 import { CROPS } from '../cropsData';
 import { FRIENDS_DATABASE } from '../friendsData';
@@ -8,10 +8,14 @@ import { TRADES_DATABASE } from '../tradesData';
 interface AppContextType {
   vitality: number;
   setVitality: React.Dispatch<React.SetStateAction<number>>;
+  maxVitality: number;
   level: number;
   setLevel: React.Dispatch<React.SetStateAction<number>>;
   xp: number;
   setXp: React.Dispatch<React.SetStateAction<number>>;
+  rebirthCount: number;
+  setRebirthCount: React.Dispatch<React.SetStateAction<number>>;
+  performRebirth: () => void;
   coins: number;
   setCoins: React.Dispatch<React.SetStateAction<number>>;
   streak: number;
@@ -40,6 +44,8 @@ interface AppContextType {
   setFriends: React.Dispatch<React.SetStateAction<Friend[]>>;
   trades: TradeOffer[];
   setTrades: React.Dispatch<React.SetStateAction<TradeOffer[]>>;
+  mailMessages: MailMessage[];
+  setMailMessages: React.Dispatch<React.SetStateAction<MailMessage[]>>;
   
   // Custom states
   inventorySeeds: Record<string, number>;
@@ -76,6 +82,9 @@ interface AppContextType {
   // Achievements/Badges
   badges: string[];
   setBadges: React.Dispatch<React.SetStateAction<string[]>>;
+  earnedBadgeOverlay: string | null;
+  setEarnedBadgeOverlay: React.Dispatch<React.SetStateAction<string | null>>;
+  claimBadge: (badgeId: string) => void;
   
   // Active selected interaction tools in Garden
   gardenMode: 'view' | 'water' | 'fertilize' | 'shovel';
@@ -147,6 +156,14 @@ interface AppContextType {
   useCooldownTicketOnGear: () => boolean;
   useCooldownTicketOnTask: (taskId: string) => boolean;
   applyMutationSpray: (plotId: number, sprayType: string) => boolean;
+
+  // Antagonist States
+  antagonistTimer: number;
+  setAntagonistTimer: React.Dispatch<React.SetStateAction<number>>;
+  activeAnimation: 'locusts' | 'crows' | 'aliens' | 'lightning' | null;
+  setActiveAnimation: React.Dispatch<React.SetStateAction<'locusts' | 'crows' | 'aliens' | 'lightning' | null>>;
+  triggerAntagonistAttack: (type: 'locusts' | 'crows' | 'aliens' | 'lightning') => void;
+  resetGardenFromScratch: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -175,6 +192,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [vitality, setVitality] = useState(85);
   const [level, setLevel] = useState(12);
   const [xp, setXp] = useState(420);
+  const [rebirthCount, setRebirthCount] = useState(0);
   const [coins, setCoins] = useState(67000);
   const [streak, setStreak] = useState(12);
   const [username, setUsername] = useState('sherKNEE');
@@ -196,6 +214,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }));
   });
   const [trades, setTrades] = useState<TradeOffer[]>(TRADES_DATABASE);
+  const [mailMessages, setMailMessages] = useState<MailMessage[]>(() => [
+    {
+      id: 'msg_init_1',
+      sender: 'Sam_EEE',
+      receiver: 'You',
+      avatar: 'https://lh3.googleusercontent.com/aida/ADBb0ujdQP6MAgmjK8hgH6aSOHT4BZIHX4Iij_p-Pzo2ikDy83vgWB7kbxRNAanC6B80uFfePmufqpKRfaPtLDUoMYMY4wm-crQU2c2T-4SZutluigzQ1k0alXn7hH3krPSNJIuQTbJ3zZXOs8CjhsI-RQh31YZ3yiB968QmftZ6D41h_jwFDgcq586EnkBA55I6Iza3tItq_RGve1En5_5WuLKtygooJn27WUa28jOelC3ykXkctgXr4NiCZQ',
+      text: "Hey there! Please let me know what you are looking for in the Trade Hub. Let's trade some nice homegrown produce soon!",
+      timestamp: '2 hours ago',
+      isRead: false
+    },
+    {
+      id: 'msg_init_2',
+      sender: 'NICOLINE123',
+      receiver: 'You',
+      avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBL9uitRrW7wpUmlD-_fh7Ox9htxM_M6ABIzoZiJfy9rL9pNVvYHXZa38PVOYA8SLAdETx4JqnVq0HTDIF8xDeyrhFYQyi4zUEK9jwHwLZ26BKFzrQ8ZBcd9y73DqF83_ciKKDWv_uA7Lv-lmhyFyksurlaUzLlyjABaakVEO3gv2-74iNG5QzVq89KuMCkAnax9-yn5j6jZ1XLHILZpva8q6tOG8WmQqxI2fXWSoIlCaeaYsrrXg44NtaS_DRzyVwnmjkdEVKIhlE',
+      text: "Your garden outline looks outstanding! Want to challenge each other in a Bible memory speed duel to calm our nerves?",
+      timestamp: '5 hours ago',
+      isRead: true
+    }
+  ]);
   
   const [inventorySeeds, setInventorySeeds] = useState<Record<string, number>>(() => getInitialSeeds());
   const [harvestedInven, setHarvestedInven] = useState<Record<string, number>>(() => getInitialHarvest());
@@ -215,8 +253,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [avatarGender, setAvatarGender] = useState<'male' | 'female'>('male');
   
   const [badges, setBadges] = useState(['100 Day Streak', 'Master Harvester']);
+  const [earnedBadgeOverlay, setEarnedBadgeOverlay] = useState<string | null>(null);
   const [gardenMode, setGardenMode] = useState<'view' | 'water' | 'fertilize' | 'shovel'>('view');
   const [alertMsg, setAlertMsg] = useState('');
+
+  const claimBadge = (badgeId: string) => {
+    setBadges(prev => {
+      if (!prev.includes(badgeId)) {
+        setEarnedBadgeOverlay(badgeId);
+        return [...prev, badgeId];
+      }
+      return prev;
+    });
+  };
   
   const [sunflowersHarvestedCount, setSunflowersHarvestedCount] = useState(2);
   const [claimedQuest, setClaimedQuest] = useState(false);
@@ -256,6 +305,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [seedsBoughtCount, setSeedsBoughtCount] = useState(142);
   const [minigamesDoneCount, setMinigamesDoneCount] = useState(87);
 
+  // Antagonist States
+  const [antagonistTimer, setAntagonistTimer] = useState<number>(3600);
+  const [activeAnimation, setActiveAnimation] = useState<'locusts' | 'crows' | 'aliens' | 'lightning' | null>(null);
+
   // Load from local storage
   useEffect(() => {
     try {
@@ -265,6 +318,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (d.vitality) setVitality(d.vitality);
         if (d.level) setLevel(d.level);
         if (d.xp) setXp(d.xp);
+        if (d.rebirthCount !== undefined) setRebirthCount(d.rebirthCount);
         if (d.coins) setCoins(d.coins);
         if (d.streak) setStreak(d.streak);
         if (d.username) setUsername(d.username);
@@ -278,6 +332,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (d.plots) setPlots(d.plots);
         if (d.tasks) setTasks(d.tasks);
         if (d.friends) setFriends(d.friends);
+        if (d.trades) setTrades(d.trades);
+        if (d.mailMessages) setMailMessages(d.mailMessages);
         if (d.inventorySeeds) setInventorySeeds({ ...getInitialSeeds(), ...d.inventorySeeds });
         if (d.harvestedInven) setHarvestedInven({ ...getInitialHarvest(), ...d.harvestedInven });
         if (d.hasWateringCan !== undefined) setHasWateringCan(d.hasWateringCan);
@@ -307,6 +363,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (d.gearShopStock) setGearShopStock(d.gearShopStock);
         if (d.cooldownTicketsCount !== undefined) setCooldownTicketsCount(d.cooldownTicketsCount);
         if (d.mutationSpraysInventory) setMutationSpraysInventory(d.mutationSpraysInventory);
+        if (d.antagonistTimer !== undefined) setAntagonistTimer(d.antagonistTimer);
       }
     } catch (e) {
       console.warn('Error reading localstorage:', e);
@@ -362,13 +419,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Save to local storage
   const saveState = () => {
     const data = {
-      vitality, level, xp, coins, streak, username, email, bio, musicOn, sfxOn, vibrationOn,
-      friendRequestsOn, language, plots, tasks, friends, inventorySeeds, harvestedInven,
+      vitality, level, xp, rebirthCount, coins, streak, username, email, bio, musicOn, sfxOn, vibrationOn,
+      friendRequestsOn, language, plots, tasks, friends, trades, mailMessages, inventorySeeds, harvestedInven,
       hasWateringCan, hasFocusTimer, hasShovel, unlockedBgs, unlockedOutfits, unlockedProps, equippedBg,
       equippedOutfit, equippedProp, equippedHat, avatarGender, badges, sunflowersHarvestedCount, claimedQuest,
       likesCount, seedsBoughtCount, minigamesDoneCount,
       rotatedCommonIds, rotatedRareIds, rotatedLegendaryIds, seedShopTimeToRotate,
-      gearShopTimeToRefresh, gearShopStock, cooldownTicketsCount, mutationSpraysInventory
+      gearShopTimeToRefresh, gearShopStock, cooldownTicketsCount, mutationSpraysInventory,
+      antagonistTimer
     };
     try {
       localStorage.setItem('seasons_habit_states', JSON.stringify(data));
@@ -380,13 +438,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     saveState();
   }, [
-    vitality, level, xp, coins, streak, username, email, bio, musicOn, sfxOn, vibrationOn,
+    vitality, level, xp, rebirthCount, coins, streak, username, email, bio, musicOn, sfxOn, vibrationOn,
     friendRequestsOn, language, plots, tasks, friends, inventorySeeds, harvestedInven,
     hasWateringCan, hasFocusTimer, hasShovel, unlockedBgs, unlockedOutfits, unlockedProps, equippedBg,
     equippedOutfit, equippedProp, equippedHat, avatarGender, badges, sunflowersHarvestedCount, claimedQuest,
     likesCount, seedsBoughtCount, minigamesDoneCount,
     rotatedCommonIds, rotatedRareIds, rotatedLegendaryIds, seedShopTimeToRotate,
-    gearShopTimeToRefresh, gearShopStock, cooldownTicketsCount, mutationSpraysInventory
+    gearShopTimeToRefresh, gearShopStock, cooldownTicketsCount, mutationSpraysInventory, antagonistTimer
   ]);
 
   const triggerAlert = (msg: string) => {
@@ -398,22 +456,86 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const addCoins = (amount: number) => {
     const double = hasFocusTimer ? amount * 2 : amount;
-    setCoins(prev => prev + double);
-    triggerAlert(`+${double} Coins earned!`);
+    const mult = streak >= 10 ? 1.5 : streak >= 5 ? 1.3 : streak >= 3 ? 1.2 : streak >= 1 ? 1.1 : 1.0;
+    const finalAmount = Math.round(double * mult);
+    setCoins(prev => prev + finalAmount);
+    if (mult > 1.0) {
+      triggerAlert(`+${finalAmount} Coins earned! (Includes a x${mult} boost from your ${streak}-day streak!)`);
+    } else {
+      triggerAlert(`+${finalAmount} Coins earned!`);
+    }
   };
 
   const addXp = (amount: number) => {
+    if (level >= 200) {
+      triggerAlert(`+${amount} XP gained! (Max level 200 reached)`);
+      return;
+    }
+
     setXp(prev => {
-      const nextXp = prev + amount;
-      if (nextXp >= 1000) {
-        setLevel(l => l + 1);
-        setVitality(100);
-        triggerAlert(`✨ LEVEL UP! You reached Level ${level + 1}! Vitality restored!`);
-        return nextXp - 1000;
+      let currentXp = prev + amount;
+      let currentLevel = level;
+      let leveledUp = false;
+
+      while (true) {
+        if (currentLevel >= 200) {
+          currentXp = 0;
+          break;
+        }
+
+        const xpNeeded = currentLevel >= 100 ? 1500 : 1000;
+        if (currentXp >= xpNeeded) {
+          currentXp -= xpNeeded;
+          currentLevel += 1;
+          leveledUp = true;
+        } else {
+          break;
+        }
       }
-      triggerAlert(`+${amount} XP gained!`);
-      return nextXp;
+
+      if (leveledUp) {
+        setLevel(currentLevel);
+        const newMaxVitality = 100 + Math.floor(currentLevel / 10) * 50;
+        setVitality(newMaxVitality);
+        if (currentLevel >= 200) {
+          triggerAlert(`✨ CONGRATULATIONS! You reached Level 200 (MAX)! All 18 plots unlocked! Rebirth option is now available in your Profile!`);
+        } else {
+          triggerAlert(`✨ LEVEL UP! You reached Level ${currentLevel}! Vitality restored to ${newMaxVitality}!`);
+        }
+      } else {
+        triggerAlert(`+${amount} XP gained!`);
+      }
+
+      return currentXp;
     });
+  };
+
+  const performRebirth = () => {
+    setPlots(INITIAL_PLOTS.map(p => {
+      if (p.id === 7 || p.id === 8) {
+        return { ...p, type: 'locked', name: '', growth: 0, stage: 1 };
+      }
+      return { ...p, type: 'empty', name: '', growth: 0, stage: 1, watered: false, fertilized: false, wateredCount: 0, mutation: undefined };
+    }));
+    setInventorySeeds(getInitialSeeds());
+    setHarvestedInven(getInitialHarvest());
+    setCoins(500); // Starter coin allocation
+    setLevel(1);
+    setXp(0);
+    setStreak(0);
+    setVitality(100);
+    setHasWateringCan(false);
+    setHasShovel(false);
+    setHasFocusTimer(false);
+    
+    // reset other counts or statistics if desired
+    setSeedsBoughtCount(0);
+    setMinigamesDoneCount(0);
+    setSunflowersHarvestedCount(0);
+    setClaimedQuest(false);
+
+    setRebirthCount(prev => prev + 1);
+    triggerAlert("🌟 REBIRTH SUCCESSFULLY PERFORMED! Your legendary journey begins anew! Level reset to 1, and your status is elevated!");
   };
 
   const rollGearShopStock = () => {
@@ -549,6 +671,153 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return true;
   };
 
+  const triggerAntagonistAttack = (type: 'locusts' | 'crows' | 'aliens' | 'lightning') => {
+    let damage = 0;
+    let name = '';
+    if (type === 'locusts') { damage = 10; name = 'Locust Attack'; }
+    if (type === 'crows') { damage = 15; name = 'Crow Attack'; }
+    if (type === 'aliens') { damage = 20; name = 'Alien Attack'; }
+    if (type === 'lightning') { damage = 40; name = 'Boss Thunder Striker Lightning Strike'; }
+
+    setActiveAnimation(type);
+    setTimeout(() => {
+      setActiveAnimation(null);
+    }, 4000);
+    
+    setVitality(prev => {
+      const nextVic = Math.max(0, prev - damage);
+      if (nextVic <= 0) {
+        setTimeout(() => {
+          triggerAlert(`💀 Your garden was wiped out by the ${name}!`);
+          resetGardenFromScratch();
+        }, 4000); // Wait for the gorgeous animation to complete!
+      }
+      return nextVic;
+    });
+
+    setStreak(0); // Drops multiplier back to 1.0x instantly
+    triggerAlert(`⚠️ The ${name} attacked! Lost ${damage} Vitality. Streak reset to 0!`);
+    setAntagonistTimer(3600);
+  };
+
+  const resetGardenFromScratch = () => {
+    setPlots(INITIAL_PLOTS.map(p => {
+      if (p.id === 7 || p.id === 8) {
+        return { ...p, type: 'locked', name: '', growth: 0, stage: 1 };
+      }
+      return { ...p, type: 'empty', name: '', growth: 0, stage: 1, watered: false, fertilized: false, wateredCount: 0, mutation: undefined };
+    }));
+    setInventorySeeds(getInitialSeeds());
+    setHarvestedInven(getInitialHarvest());
+    setCoins(500); // Starter coin allocation
+    setLevel(1);
+    setXp(0);
+    setStreak(0);
+    setVitality(100);
+    setHasWateringCan(false);
+    setHasShovel(false);
+    setHasFocusTimer(false);
+    triggerAlert("🌿 Garden wiped out! Rebuilding from scratch with 500 starter coins!");
+  };
+
+  // Auto-unlock plots based on Level (Dynamic array size and locks)
+  useEffect(() => {
+    setPlots(prev => {
+      const targetSize = level >= 100 ? 18 : 9;
+      let updated = [...prev];
+      
+      // Ensure the array matches the target size based on whether it is >= 100
+      if (updated.length < targetSize) {
+        for (let i = updated.length; i < targetSize; i++) {
+          updated.push({
+            id: i,
+            type: 'locked',
+            name: '',
+            watered: false,
+            fertilized: false,
+            growth: 0,
+            stage: 1
+          });
+        }
+      } else if (updated.length > targetSize) {
+        updated = updated.slice(0, targetSize);
+      }
+      
+      // Determine how many plots should be unlocked at this level
+      let unlockedCount = 3;
+      if (level < 100) {
+        unlockedCount = Math.min(9, 3 + Math.floor(level / 10));
+      } else if (level < 200) {
+        // At level 100, we have double the farm plots (18 max plots), starting with 3 unlocked as usual
+        unlockedCount = Math.min(18, 3 + Math.floor((level - 100) / 10));
+      } else {
+        // When you reach level 200, all plots should be unlocked (18)
+        unlockedCount = 18;
+      }
+
+      let changed = updated.length !== prev.length;
+      
+      updated = updated.map((p, idx) => {
+        if (idx < unlockedCount) {
+          // Should be unlocked (empty or already planted)
+          if (p.type === 'locked') {
+            changed = true;
+            return { ...p, type: 'empty', name: '', growth: 0, stage: 1, watered: false, fertilized: false, wateredCount: 0 };
+          }
+        } else {
+          // Should be locked
+          if (p.type !== 'locked') {
+            changed = true;
+            return { ...p, type: 'locked', name: '', growth: 0, stage: 1, watered: false, fertilized: false, wateredCount: 0 };
+          }
+        }
+        return p;
+      });
+      
+      return changed ? updated : prev;
+    });
+  }, [level]);
+
+  // Central timer for Antagonist warning countdown
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // Check threat state
+      const completedCount = tasks.filter(t => t.completed).length;
+      const totalCount = tasks.length;
+      const missedCount = totalCount - completedCount;
+      const hasThreat = completedCount === 0 || missedCount >= 2;
+      
+      if (hasThreat) {
+        setAntagonistTimer(prev => {
+          if (prev <= 1) {
+            let type: 'locusts' | 'crows' | 'aliens' | 'lightning' = 'locusts';
+            if (completedCount === 0) {
+              type = 'lightning';
+            } else if (missedCount >= 4) {
+              type = 'aliens';
+            } else if (missedCount === 3) {
+              type = 'crows';
+            } else if (missedCount === 2) {
+              type = 'locusts';
+            }
+            
+            setTimeout(() => {
+              triggerAntagonistAttack(type);
+            }, 10);
+            
+            return 3600;
+          }
+          return prev - 1;
+        });
+      } else {
+        // Safe: reset countdown to 1 hour (3600 seconds)
+        setAntagonistTimer(3600);
+      }
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, [tasks]);
+
   // Mount logic inside AppContext to initialize stock
   useEffect(() => {
     if (rotatedCommonIds.length === 0) {
@@ -587,9 +856,36 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => clearInterval(timer);
   }, []);
 
+  // Automated Reactive Badge Award Triggers
+  useEffect(() => {
+    // 1. Leveling Sovereign Badge: reach Level 15 or more
+    if (level >= 15) {
+      claimBadge('Leveling Sovereign');
+    }
+  }, [level]);
+
+  useEffect(() => {
+    // 2. Habit Warrior Badge: check streak
+    if (streak >= 5) {
+      claimBadge('Habit Warrior');
+    }
+  }, [streak]);
+
+  useEffect(() => {
+    // 3. Seed Collector / Rare Seed Expert check
+    if (seedsBoughtCount >= 1) {
+      claimBadge('Seed Collector');
+    }
+    if (seedsBoughtCount >= 5) {
+      claimBadge('Rare Seed Expert');
+    }
+  }, [seedsBoughtCount]);
+
+  const maxVitality = 100 + Math.floor(level / 10) * 50;
+
   return (
     <AppContext.Provider value={{
-      vitality, setVitality, level, setLevel, xp, setXp, coins, setCoins,
+      vitality, setVitality, maxVitality, level, setLevel, xp, setXp, rebirthCount, setRebirthCount, performRebirth, coins, setCoins,
       streak, setStreak, username, setUsername, email, setEmail, bio, setBio,
       musicOn, setMusicOn, sfxOn, setSfxOn, vibrationOn, setVibrationOn,
       friendRequestsOn, setFriendRequestsOn, language, setLanguage,
@@ -601,7 +897,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       equippedOutfit, setEquippedOutfit, equippedProp, setEquippedProp,
       equippedHat, setEquippedHat,
       avatarGender, setAvatarGender,
-      badges, setBadges, gardenMode, setGardenMode, alertMsg, triggerAlert,
+      badges, setBadges, earnedBadgeOverlay, setEarnedBadgeOverlay, claimBadge, gardenMode, setGardenMode, alertMsg, triggerAlert,
+      mailMessages, setMailMessages,
       sunflowersHarvestedCount, setSunflowersHarvestedCount, claimedQuest, setClaimedQuest,
       profileOverlayTarget, setProfileOverlayTarget,
       likesCount, setLikesCount, seedsBoughtCount, setSeedsBoughtCount,
@@ -624,7 +921,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       useCooldownTicketOnSeeds,
       useCooldownTicketOnGear,
       useCooldownTicketOnTask,
-      applyMutationSpray
+      applyMutationSpray,
+
+      antagonistTimer, setAntagonistTimer,
+      activeAnimation, setActiveAnimation,
+      triggerAntagonistAttack,
+      resetGardenFromScratch
     }}>
       {children}
     </AppContext.Provider>

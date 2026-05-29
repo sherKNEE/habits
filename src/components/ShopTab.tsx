@@ -8,6 +8,7 @@ import { FarmerAvatar } from './FarmerAvatar';
 import { PixelHat } from './PixelHat';
 import { PixelPlant } from './PixelPlant';
 import { PixelProp } from './PixelProp';
+import { PixelGear } from './PixelGear';
 
 export const ShopTab: React.FC = () => {
   const {
@@ -659,8 +660,8 @@ export const ShopTab: React.FC = () => {
                 )}
                 <div>
                   <div className="flex justify-between items-start mb-2">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${gear.bgClass || 'bg-blue-100'} ${gear.textClass || 'text-blue-800'}`}>
-                      <span className="material-symbols-outlined text-2xl">{gear.icon}</span>
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center p-1 ${gear.bgClass || 'bg-blue-100'} ${gear.textClass || 'text-blue-800'}`}>
+                      <PixelGear id={gear.id} className="w-8 h-8" />
                     </div>
                     <div className={`font-sans text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${gear.borderClass || 'border-blue-200'} ${gear.bgClass || 'bg-blue-100'} ${gear.textClass || 'text-blue-800'}`}>
                       {isStocked ? `Stock: ${stockCount}` : 'Limit: 1'}
