@@ -56,6 +56,8 @@ interface AppContextType {
   // Custom purchases
   hasWateringCan: boolean;
   setHasWateringCan: React.Dispatch<React.SetStateAction<boolean>>;
+  wateringCanCount: number;
+  setWateringCanCount: React.Dispatch<React.SetStateAction<number>>;
   hasFocusTimer: boolean;
   setHasFocusTimer: React.Dispatch<React.SetStateAction<boolean>>;
   hasShovel: boolean;
@@ -239,6 +241,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [harvestedInven, setHarvestedInven] = useState<Record<string, number>>(() => getInitialHarvest());
   
   const [hasWateringCan, setHasWateringCan] = useState(false);
+  const [wateringCanCount, setWateringCanCount] = useState(0);
   const [hasFocusTimer, setHasFocusTimer] = useState(false);
   const [hasShovel, setHasShovel] = useState(false);
   
@@ -337,6 +340,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (d.inventorySeeds) setInventorySeeds({ ...getInitialSeeds(), ...d.inventorySeeds });
         if (d.harvestedInven) setHarvestedInven({ ...getInitialHarvest(), ...d.harvestedInven });
         if (d.hasWateringCan !== undefined) setHasWateringCan(d.hasWateringCan);
+        if (d.wateringCanCount !== undefined) setWateringCanCount(d.wateringCanCount);
         if (d.hasFocusTimer !== undefined) setHasFocusTimer(d.hasFocusTimer);
         if (d.hasShovel !== undefined) setHasShovel(d.hasShovel);
         if (d.unlockedBgs) setUnlockedBgs(d.unlockedBgs);
@@ -421,7 +425,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const data = {
       vitality, level, xp, rebirthCount, coins, streak, username, email, bio, musicOn, sfxOn, vibrationOn,
       friendRequestsOn, language, plots, tasks, friends, trades, mailMessages, inventorySeeds, harvestedInven,
-      hasWateringCan, hasFocusTimer, hasShovel, unlockedBgs, unlockedOutfits, unlockedProps, equippedBg,
+      hasWateringCan, wateringCanCount, hasFocusTimer, hasShovel, unlockedBgs, unlockedOutfits, unlockedProps, equippedBg,
       equippedOutfit, equippedProp, equippedHat, avatarGender, badges, sunflowersHarvestedCount, claimedQuest,
       likesCount, seedsBoughtCount, minigamesDoneCount,
       rotatedCommonIds, rotatedRareIds, rotatedLegendaryIds, seedShopTimeToRotate,
@@ -440,7 +444,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [
     vitality, level, xp, rebirthCount, coins, streak, username, email, bio, musicOn, sfxOn, vibrationOn,
     friendRequestsOn, language, plots, tasks, friends, inventorySeeds, harvestedInven,
-    hasWateringCan, hasFocusTimer, hasShovel, unlockedBgs, unlockedOutfits, unlockedProps, equippedBg,
+    hasWateringCan, wateringCanCount, hasFocusTimer, hasShovel, unlockedBgs, unlockedOutfits, unlockedProps, equippedBg,
     equippedOutfit, equippedProp, equippedHat, avatarGender, badges, sunflowersHarvestedCount, claimedQuest,
     likesCount, seedsBoughtCount, minigamesDoneCount,
     rotatedCommonIds, rotatedRareIds, rotatedLegendaryIds, seedShopTimeToRotate,
@@ -525,6 +529,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStreak(0);
     setVitality(100);
     setHasWateringCan(false);
+    setWateringCanCount(0);
     setHasShovel(false);
     setHasFocusTimer(false);
     
@@ -715,6 +720,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStreak(0);
     setVitality(100);
     setHasWateringCan(false);
+    setWateringCanCount(0);
     setHasShovel(false);
     setHasFocusTimer(false);
     triggerAlert("🌿 Garden wiped out! Rebuilding from scratch with 500 starter coins!");
@@ -891,7 +897,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       friendRequestsOn, setFriendRequestsOn, language, setLanguage,
       plots, setPlots, tasks, setTasks, friends, setFriends, trades, setTrades,
       inventorySeeds, setInventorySeeds, harvestedInven, setHarvestedInven,
-      hasWateringCan, setHasWateringCan, hasFocusTimer, setHasFocusTimer, hasShovel, setHasShovel,
+      hasWateringCan, setHasWateringCan, wateringCanCount, setWateringCanCount, hasFocusTimer, setHasFocusTimer, hasShovel, setHasShovel,
       unlockedBgs, setUnlockedBgs, unlockedOutfits, setUnlockedOutfits,
       unlockedProps, setUnlockedProps, equippedBg, setEquippedBg,
       equippedOutfit, setEquippedOutfit, equippedProp, setEquippedProp,

@@ -16,6 +16,8 @@ export const ShopTab: React.FC = () => {
     setCoins,
     hasWateringCan,
     setHasWateringCan,
+    wateringCanCount,
+    setWateringCanCount,
     hasFocusTimer,
     setHasFocusTimer,
     hasShovel,
@@ -220,7 +222,8 @@ export const ShopTab: React.FC = () => {
       setCoins(c => c - cost);
       setGearShopStock(prev => ({ ...prev, wateringCan: prev.wateringCan - 1 }));
       setHasWateringCan(true);
-      triggerAlert(`Bought 1x ${gearName}! Your crops can now be nurtured.`);
+      setWateringCanCount(prev => prev + 1);
+      triggerAlert(`Bought 1x ${gearName}! Accumulated ${wateringCanCount + 1} watering cans in your inventory.`);
     } else if (item === 'mutationCrates') {
       if (gearShopStock.mutationCrates <= 0) {
         triggerAlert("⚠️ Out of stock! Mutation crates are extremely rare.");
@@ -645,8 +648,7 @@ export const ShopTab: React.FC = () => {
                                gear.id === 'mutationCrates' ? gearShopStock.mutationCrates :
                                gear.id === 'cooldownTickets' ? gearShopStock.cooldownTickets : 1;
             
-            const isOwned = gear.id === 'wateringCan' ? hasWateringCan :
-                            gear.id === 'focusTimer' ? hasFocusTimer :
+            const isOwned = gear.id === 'focusTimer' ? hasFocusTimer :
                             gear.id === 'shovel' ? hasShovel : false;
 
             const isSoldOut = isStocked && stockCount <= 0;
@@ -661,13 +663,18 @@ export const ShopTab: React.FC = () => {
                 <div>
                   <div className="flex justify-between items-start mb-2">
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center p-1 ${gear.bgClass || 'bg-blue-100'} ${gear.textClass || 'text-blue-800'}`}>
-                      <PixelGear id={gear.id} className="w-8 h-8" />
+                       <PixelGear id={gear.id} className="w-8 h-8" />
                     </div>
                     <div className={`font-sans text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${gear.borderClass || 'border-blue-200'} ${gear.bgClass || 'bg-blue-100'} ${gear.textClass || 'text-blue-800'}`}>
                       {isStocked ? `Stock: ${stockCount}` : 'Limit: 1'}
                     </div>
                   </div>
                   <h3 className="font-serif text-sm font-black text-primary mb-1">{gear.name}</h3>
+                  {gear.id === 'wateringCan' && (
+                    <div className="text-[10px] text-blue-600 font-extrabold mb-1 bg-blue-50 px-2 py-0.5 rounded border border-blue-150 inline-block">
+                      🎒 Backpack Inventory: {wateringCanCount}
+                    </div>
+                  )}
                   <p className="font-sans text-[11px] text-[#72796e] leading-snug mb-3">
                     {gear.description}
                   </p>

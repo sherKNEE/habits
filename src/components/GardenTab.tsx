@@ -311,7 +311,8 @@ export const GardenTab: React.FC = () => {
     gardenMode, setGardenMode,
     inventorySeeds, setInventorySeeds,
     harvestedInven, setHarvestedInven,
-    hasWateringCan,
+    hasWateringCan, setHasWateringCan,
+    wateringCanCount, setWateringCanCount,
     hasShovel,
     badges, setBadges, claimBadge,
     sunflowersHarvestedCount, setSunflowersHarvestedCount,
@@ -486,8 +487,8 @@ export const GardenTab: React.FC = () => {
 
     // Direct Quick tool usage
     if (gardenMode === 'water' && plot.type !== 'empty') {
-      if (!hasWateringCan) {
-        triggerAlert("⚠️ You need to buy a Watering Can for 100 Coins from the Gear Shop first!");
+      if (!hasWateringCan || wateringCanCount <= 0) {
+        triggerAlert("⚠️ You have run out of Watering Cans! Buy more from the Gear Shop to continue watering.");
         return;
       }
       if (plot.growth < 100) {
@@ -505,8 +506,16 @@ export const GardenTab: React.FC = () => {
           return p;
         }));
         
+        setWateringCanCount(prev => {
+          const nextVal = Math.max(0, prev - 1);
+          if (nextVal <= 0) {
+            setHasWateringCan(false);
+          }
+          return nextVal;
+        });
+
         const nextW = Math.min(required, (plot.wateredCount || 0) + 1);
-        triggerAlert(`Watered ${plot.name}! (Progress: ${nextW}/${required} waterings)`);
+        triggerAlert(`Watered ${plot.name}! (Progress: ${nextW}/${required} waterings). Cans remaining: ${Math.max(0, wateringCanCount - 1)}.`);
       } else {
         triggerAlert(`${plot.name} is fully mature! Double click to harvest.`);
       }
@@ -899,8 +908,13 @@ export const GardenTab: React.FC = () => {
                 setGardenMode(gardenMode === 'water' ? 'view' : 'water');
                 triggerAlert(gardenMode === 'water' ? "View mode set." : "Watering brush active! Click any plant.");
               }}
-              className={`p-1.5 rounded-xl border flex flex-col items-center transition-all cursor-pointer ${gardenMode === 'water' ? 'bg-primary text-white border-primary' : 'bg-white/55 border-primary/15 text-primary hover:bg-white'}`}
+              className={`p-1.5 rounded-xl border flex flex-col items-center transition-all cursor-pointer relative ${gardenMode === 'water' ? 'bg-primary text-white border-primary' : 'bg-white/55 border-primary/15 text-primary hover:bg-white'}`}
             >
+              {wateringCanCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-blue-500 text-white font-sans text-[8px] font-black px-1.5 py-0.5 rounded-full shadow-sm text-center min-w-[14px]">
+                  {wateringCanCount}
+                </span>
+              )}
               <span className="material-symbols-outlined text-lg">water_drop</span>
               <span className="font-sans text-[7px] uppercase tracking-wider font-bold">Water</span>
             </button>
@@ -1139,8 +1153,8 @@ export const GardenTab: React.FC = () => {
             <div className="flex gap-2 shrink-0">
               <button 
                 onClick={() => {
-                  if (!hasWateringCan) {
-                    triggerAlert("⚠️ You need to buy a Watering Can for 100 Coins from the Gear Shop first!");
+                  if (!hasWateringCan || wateringCanCount <= 0) {
+                    triggerAlert("⚠️ You have run out of Watering Cans! Buy more from the Gear Shop to continue watering.");
                     return;
                   }
                   const required = getCropRequiredWaterings(selectedPlot.type);
@@ -1156,7 +1170,16 @@ export const GardenTab: React.FC = () => {
                     }
                     return p;
                   }));
-                  triggerAlert("Watered successfully!");
+                  
+                  setWateringCanCount(prev => {
+                    const nextVal = Math.max(0, prev - 1);
+                    if (nextVal <= 0) {
+                      setHasWateringCan(false);
+                    }
+                    return nextVal;
+                  });
+
+                  triggerAlert(`Watered successfully! Cans remaining: ${Math.max(0, wateringCanCount - 1)}.`);
                   setSelectedPlot(null);
                 }}
                 className="bg-primary text-white font-sans text-xs px-3 py-1.5 rounded-lg border-2 border-primary hover:bg-white hover:text-primary transition-all font-bold flex items-center gap-1 cursor-pointer"

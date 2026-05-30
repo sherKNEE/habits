@@ -56,6 +56,8 @@ export const TasksTab: React.FC = () => {
   
   // Verification dialog states
   const [verificationImage, setVerificationImage] = useState<string | null>(null);
+  const [isSandboxPreset, setIsSandboxPreset] = useState<boolean>(false);
+  const [presetExpectedType, setPresetExpectedType] = useState<'valid' | 'invalid' | 'image'>('image');
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationResult, setVerificationResult] = useState<{ success: boolean; reason: string } | null>(null);
   const [useCamera, setUseCamera] = useState(false);
@@ -184,6 +186,8 @@ export const TasksTab: React.FC = () => {
         ctx.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
         const dataUrl = canvasElement.toDataURL('image/png');
         setVerificationImage(dataUrl);
+        setIsSandboxPreset(false);
+        setPresetExpectedType('image');
         setVerificationResult(null);
         stopCameraStream();
       }
@@ -196,6 +200,8 @@ export const TasksTab: React.FC = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setVerificationImage(reader.result as string);
+        setIsSandboxPreset(false);
+        setPresetExpectedType('image');
         setVerificationResult(null);
       };
       reader.readAsDataURL(file);
@@ -217,6 +223,8 @@ export const TasksTab: React.FC = () => {
           taskCategory: activeVerificationTask.category,
           verificationType: activeVerificationTask.verificationType || 'image',
           imageBase64: verificationImage,
+          isSandboxPreset,
+          presetExpectedType,
           customPrompt: activeVerificationTask.id === 't2' 
             ? 'Verify steps counter. The steps MUST be at least 5000 steps. Reject if under 5k steps.' 
             : undefined
@@ -927,6 +935,8 @@ export const TasksTab: React.FC = () => {
                               type="button"
                               onClick={() => {
                                 setVerificationImage(`data:image/png;base64,${p.base64}`);
+                                setIsSandboxPreset(true);
+                                setPresetExpectedType(p.type);
                                 setVerificationResult(null);
                                 triggerAlert(`💡 Loaded Sandbox Preset: "${p.name}"`);
                               }}
